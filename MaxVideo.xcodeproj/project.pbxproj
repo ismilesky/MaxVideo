@@ -15,6 +15,7 @@
 		57A6B72B1D9E29E5007C7984 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57A6B7291D9E29E5007C7984 /* LaunchScreen.storyboard */; };
 		57A6B7361D9E29E5007C7984 /* MaxVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B7351D9E29E5007C7984 /* MaxVideoTests.m */; };
 		57A6B7411D9E29E5007C7984 /* MaxVideoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B7401D9E29E5007C7984 /* MaxVideoUITests.m */; };
+		57A6B75A1D9E5344007C7984 /* HandlerVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B7591D9E5344007C7984 /* HandlerVideo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		57A6B73C1D9E29E5007C7984 /* MaxVideoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MaxVideoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		57A6B7401D9E29E5007C7984 /* MaxVideoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MaxVideoUITests.m; sourceTree = "<group>"; };
 		57A6B7421D9E29E5007C7984 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		57A6B7581D9E5344007C7984 /* HandlerVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandlerVideo.h; sourceTree = "<group>"; };
+		57A6B7591D9E5344007C7984 /* HandlerVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandlerVideo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +106,8 @@
 			children = (
 				57A6B71E1D9E29E4007C7984 /* AppDelegate.h */,
 				57A6B71F1D9E29E4007C7984 /* AppDelegate.m */,
+				57A6B7581D9E5344007C7984 /* HandlerVideo.h */,
+				57A6B7591D9E5344007C7984 /* HandlerVideo.m */,
 				57A6B7211D9E29E4007C7984 /* ViewController.h */,
 				57A6B7221D9E29E4007C7984 /* ViewController.m */,
 				57A6B7241D9E29E4007C7984 /* Main.storyboard */,
@@ -275,6 +280,7 @@
 			files = (
 				57A6B7231D9E29E4007C7984 /* ViewController.m in Sources */,
 				57A6B7201D9E29E4007C7984 /* AppDelegate.m in Sources */,
+				57A6B75A1D9E5344007C7984 /* HandlerVideo.m in Sources */,
 				57A6B71D1D9E29E4007C7984 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,6 +513,7 @@
 				57A6B7471D9E29E5007C7984 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		57A6B7481D9E29E5007C7984 /* Build configuration list for PBXNativeTarget "MaxVideoTests" */ = {
 			isa = XCConfigurationList;
@@ -515,6 +522,7 @@
 				57A6B74A1D9E29E5007C7984 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		57A6B74B1D9E29E5007C7984 /* Build configuration list for PBXNativeTarget "MaxVideoUITests" */ = {
 			isa = XCConfigurationList;
@@ -523,6 +531,7 @@
 				57A6B74D1D9E29E5007C7984 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
