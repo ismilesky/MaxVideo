@@ -307,4 +307,58 @@ static HandlerVideo *instance = nil;
 }
 
 
+- (void)splitVideo:(NSURL *)fileUrl fps:(float)fps splitCompleteBlock:(SplitCompleteBlock)splitCompleteBlock {
+    if (!fileUrl) {
+        return;
+    }
+    NSMutableArray *splitImages = [NSMutableArray array];
+    NSDictionary *optDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVURLAsset *avasset = [[AVURLAsset alloc] initWithURL:fileUrl options:optDict];
+    
+    CMTime cmtime = avasset.duration; //视频时间信息结构体
+    Float64 durationSeconds = CMTimeGetSeconds(cmtime); //视频总秒数
+    
+    NSMutableArray *times = [NSMutableArray array];
+    Float64 totalFrames = durationSeconds * fps; //获得视频总帧数
+    CMTime timeFrame;
+    for (int i = 1; i <= totalFrames; i++) {
+        timeFrame = CMTimeMake(i, fps); //第i帧  帧率
+        NSValue *timeValue = [NSValue valueWithCMTime:timeFrame];
+        [times addObject:timeValue];
+    }
+    
+    AVAssetImageGenerator *imgGenerator = [[AVAssetImageGenerator alloc] initWithAsset:avasset];
+    //防止时间出现偏差
+    imgGenerator.requestedTimeToleranceBefore = kCMTimeZero;
+    imgGenerator.requestedTimeToleranceAfter = kCMTimeZero;
+    
+    NSInteger timesCount = [times count];
+    [imgGenerator generateCGImagesAsynchronouslyForTimes:times completionHandler:^(CMTime requestedTime, CGImageRef  _Nullable image, CMTime actualTime, AVAssetImageGeneratorResult result, NSError * _Nullable error) {
+        printf("current-----: %lld\n", requestedTime.value);
+        printf("timeScale----: %d\n",requestedTime.timescale);
+        BOOL isSuccess = NO;
+        switch (result) {
+            case AVAssetImageGeneratorCancelled:
+                NSLog(@"Cancelled");
+                break;
+            case AVAssetImageGeneratorFailed:
+                NSLog(@"Failed");
+                break;
+            case AVAssetImageGeneratorSucceeded: {
+                UIImage *frameImg = [UIImage imageWithCGImage:image];
+                [splitImages addObject:frameImg];
+                
+                if (requestedTime.value == timesCount) {
+                    isSuccess = YES;
+                    NSLog(@"completed");
+                }
+            }
+                break;
+        }
+        if (splitCompleteBlock) {
+            splitCompleteBlock(isSuccess,splitImages);
+        }
+    }];
+}
+
 @end
