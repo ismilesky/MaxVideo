@@ -1,6 +1,5 @@
 //
 //  HandlerVideo.h
-//  ComicPhoto
 //
 
 #import <UIKit/UIKit.h>
