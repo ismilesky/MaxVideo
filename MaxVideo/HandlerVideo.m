@@ -277,6 +277,20 @@ static HandlerVideo *instance = nil;
         [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
     }
 
+    /**
+     我们可以通过设置AVCaptureSession的一些属性来改变捕捉画面的质量
+     但是要注意:size相关的属性的时候需要首先进行测试设备是否支持
+     判断方法是  canSetSessionPreset
+     
+     AVAssetExportPresetLowQuality       低质量 可以通过移动网络分享(默认低质量)
+     AVAssetExportPresetMediumQuality    中等质量 可以通过WIFI网络分享
+     AVAssetExportPresetHighestQuality   高等质量
+     AVAssetExportPreset640x480
+     AVAssetExportPreset960x540
+     AVAssetExportPreset1280x720    720pHD
+     AVAssetExportPreset1920x1080   1080pHD
+     AVAssetExportPreset3840x2160
+     */
     AVAssetExportSession *exportor = [[AVAssetExportSession alloc] initWithAsset:videoComposition presetName:AVAssetExportPresetLowQuality];
     exportor.outputFileType = AVFileTypeMPEG4;
     exportor.outputURL = [NSURL fileURLWithPath:videoFullPath];

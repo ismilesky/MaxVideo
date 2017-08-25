@@ -16,6 +16,8 @@
 		57A6B7361D9E29E5007C7984 /* MaxVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B7351D9E29E5007C7984 /* MaxVideoTests.m */; };
 		57A6B7411D9E29E5007C7984 /* MaxVideoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B7401D9E29E5007C7984 /* MaxVideoUITests.m */; };
 		57A6B75A1D9E5344007C7984 /* HandlerVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B7591D9E5344007C7984 /* HandlerVideo.m */; };
+		57AA40D11F4FC8E000D9ACA6 /* video2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 57AA40CF1F4FC8E000D9ACA6 /* video2.mp4 */; };
+		57AA40D21F4FC8E000D9ACA6 /* video1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 57AA40D01F4FC8E000D9ACA6 /* video1.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,8 @@
 		57A6B7421D9E29E5007C7984 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57A6B7581D9E5344007C7984 /* HandlerVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandlerVideo.h; sourceTree = "<group>"; };
 		57A6B7591D9E5344007C7984 /* HandlerVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandlerVideo.m; sourceTree = "<group>"; };
+		57AA40CF1F4FC8E000D9ACA6 /* video2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video2.mp4; sourceTree = "<group>"; };
+		57AA40D01F4FC8E000D9ACA6 /* video1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video1.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,8 @@
 				57A6B7271D9E29E5007C7984 /* Assets.xcassets */,
 				57A6B7291D9E29E5007C7984 /* LaunchScreen.storyboard */,
 				57A6B72C1D9E29E5007C7984 /* Info.plist */,
+				57AA40CF1F4FC8E000D9ACA6 /* video2.mp4 */,
+				57AA40D01F4FC8E000D9ACA6 /* video1.mp4 */,
 				57A6B71B1D9E29E4007C7984 /* Supporting Files */,
 			);
 			path = MaxVideo;
@@ -253,6 +259,8 @@
 			files = (
 				57A6B72B1D9E29E5007C7984 /* LaunchScreen.storyboard in Resources */,
 				57A6B7281D9E29E5007C7984 /* Assets.xcassets in Resources */,
+				57AA40D11F4FC8E000D9ACA6 /* video2.mp4 in Resources */,
+				57AA40D21F4FC8E000D9ACA6 /* video1.mp4 in Resources */,
 				57A6B7261D9E29E4007C7984 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
