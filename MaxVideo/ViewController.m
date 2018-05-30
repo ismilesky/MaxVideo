@@ -47,7 +47,7 @@
 //    }
 //    
 //   // 分解视频
-//    NSString *path = @"/Users/vs/Desktop/07F3E1F6-534A-4339-A945-4FA5939E5F55.mp4";
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"video1" ofType:@"mp4"];
 //    [[HandlerVideo sharedInstance] splitVideo:[NSURL fileURLWithPath:path] fps:10 splitCompleteBlock:^(BOOL success, NSMutableArray *splitimgs) {
 //        if (success && splitimgs.count != 0) {
 //            NSLog(@"----->> success");
