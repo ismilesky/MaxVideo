@@ -245,6 +245,11 @@ static HandlerVideo *instance = nil;
         completedBlock(NO, @"合成失败");
         return;
     }
+    
+    // 解决拍的视频合成之后旋转90度的问题
+    AVAssetTrack *assetVideoTrack = firstVideoTracks.firstObject;
+    [track setPreferredTransform:assetVideoTrack.preferredTransform];
+    
     [track insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstVideo.duration) ofTrack:firstVideoTracks.firstObject atTime:kCMTimeZero error:nil];
     /**
      PS: 如果视频有声音,就需要将注释掉的打开
@@ -291,7 +296,7 @@ static HandlerVideo *instance = nil;
      AVAssetExportPreset1920x1080   1080pHD
      AVAssetExportPreset3840x2160
      */
-    AVAssetExportSession *exportor = [[AVAssetExportSession alloc] initWithAsset:videoComposition presetName:AVAssetExportPresetLowQuality];
+    AVAssetExportSession *exportor = [[AVAssetExportSession alloc] initWithAsset:videoComposition presetName:AVAssetExportPresetHighestQuality];
     exportor.outputFileType = AVFileTypeMPEG4;
     exportor.outputURL = [NSURL fileURLWithPath:videoFullPath];
     exportor.shouldOptimizeForNetworkUse = YES;

@@ -27,6 +27,7 @@
     // 合并视频 (注：将视频导出路径设置为桌面方便测试，实际开发存入沙盒即可)
     NSString *path1 = [[NSBundle mainBundle] pathForResource:@"video1" ofType:@"mp4"];
     NSString *path2 = [[NSBundle mainBundle] pathForResource:@"video2" ofType:@"mp4"];
+    
     self.conbineVideos = [NSMutableArray arrayWithObjects:path1,path2,nil];
     NSLog(@"%@",kCombineVideo);
     
