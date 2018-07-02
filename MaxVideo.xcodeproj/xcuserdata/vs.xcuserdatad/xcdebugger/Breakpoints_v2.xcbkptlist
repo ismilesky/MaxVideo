@@ -9,13 +9,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MaxVideo/ViewController.m"
-            timestampString = "549361976.17926"
+            filePath = "MaxVideo/HandlerVideo.m"
+            timestampString = "552201820.13389"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "467"
+            endingLineNumber = "467"
+            landmarkName = "-addWatermaskVideoWithWatermaskImg:inputVideoPath:outputVideoFullPath:completedBlock:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,13 +25,45 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MaxVideo/ViewController.m"
-            timestampString = "549361976.179338"
+            filePath = "MaxVideo/HandlerVideo.m"
+            timestampString = "552201820.133976"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "472"
+            endingLineNumber = "472"
+            landmarkName = "-addWatermaskVideoWithWatermaskImg:inputVideoPath:outputVideoFullPath:completedBlock:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MaxVideo/HandlerVideo.m"
+            timestampString = "552201820.134034"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "380"
+            endingLineNumber = "380"
+            landmarkName = "-monitorExportProgress:progressImageBlock:completedBlock:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MaxVideo/HandlerVideo.m"
+            timestampString = "552201820.134087"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "381"
+            endingLineNumber = "381"
+            landmarkName = "-monitorExportProgress:progressImageBlock:completedBlock:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

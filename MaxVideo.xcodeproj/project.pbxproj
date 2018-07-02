@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		572EDBD720E9D0090015ED9D /* AudioTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 572EDBD620E9D0090015ED9D /* AudioTool.m */; };
+		572EDBD920E9D84E0015ED9D /* 123.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 572EDBD820E9D84D0015ED9D /* 123.mp3 */; };
+		5781A03D20C92E8E00E763D5 /* paint_watermark.png in Resources */ = {isa = PBXBuildFile; fileRef = 5781A03C20C92E8E00E763D5 /* paint_watermark.png */; };
 		57A6B71D1D9E29E4007C7984 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B71C1D9E29E4007C7984 /* main.m */; };
 		57A6B7201D9E29E4007C7984 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B71F1D9E29E4007C7984 /* AppDelegate.m */; };
 		57A6B7231D9E29E4007C7984 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B7221D9E29E4007C7984 /* ViewController.m */; };
@@ -38,6 +41,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		572EDBD520E9D0090015ED9D /* AudioTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioTool.h; sourceTree = "<group>"; };
+		572EDBD620E9D0090015ED9D /* AudioTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioTool.m; sourceTree = "<group>"; };
+		572EDBD820E9D84D0015ED9D /* 123.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 123.mp3; sourceTree = "<group>"; };
+		5781A03C20C92E8E00E763D5 /* paint_watermark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = paint_watermark.png; sourceTree = "<group>"; };
 		57A6B7181D9E29E4007C7984 /* MaxVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaxVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57A6B71C1D9E29E4007C7984 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		57A6B71E1D9E29E4007C7984 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -112,14 +119,18 @@
 				57A6B71F1D9E29E4007C7984 /* AppDelegate.m */,
 				57A6B7581D9E5344007C7984 /* HandlerVideo.h */,
 				57A6B7591D9E5344007C7984 /* HandlerVideo.m */,
+				572EDBD520E9D0090015ED9D /* AudioTool.h */,
+				572EDBD620E9D0090015ED9D /* AudioTool.m */,
 				57A6B7211D9E29E4007C7984 /* ViewController.h */,
 				57A6B7221D9E29E4007C7984 /* ViewController.m */,
 				57A6B7241D9E29E4007C7984 /* Main.storyboard */,
+				5781A03C20C92E8E00E763D5 /* paint_watermark.png */,
 				57A6B7271D9E29E5007C7984 /* Assets.xcassets */,
 				57A6B7291D9E29E5007C7984 /* LaunchScreen.storyboard */,
 				57A6B72C1D9E29E5007C7984 /* Info.plist */,
 				57AA40CF1F4FC8E000D9ACA6 /* video2.mp4 */,
 				57AA40D01F4FC8E000D9ACA6 /* video1.mp4 */,
+				572EDBD820E9D84D0015ED9D /* 123.mp3 */,
 				57A6B71B1D9E29E4007C7984 /* Supporting Files */,
 			);
 			path = MaxVideo;
@@ -257,7 +268,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				572EDBD920E9D84E0015ED9D /* 123.mp3 in Resources */,
 				57A6B72B1D9E29E5007C7984 /* LaunchScreen.storyboard in Resources */,
+				5781A03D20C92E8E00E763D5 /* paint_watermark.png in Resources */,
 				57A6B7281D9E29E5007C7984 /* Assets.xcassets in Resources */,
 				57AA40D11F4FC8E000D9ACA6 /* video2.mp4 in Resources */,
 				57AA40D21F4FC8E000D9ACA6 /* video1.mp4 in Resources */,
@@ -289,6 +302,7 @@
 				57A6B7231D9E29E4007C7984 /* ViewController.m in Sources */,
 				57A6B7201D9E29E4007C7984 /* AppDelegate.m in Sources */,
 				57A6B75A1D9E5344007C7984 /* HandlerVideo.m in Sources */,
+				572EDBD720E9D0090015ED9D /* AudioTool.m in Sources */,
 				57A6B71D1D9E29E4007C7984 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

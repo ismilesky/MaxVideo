@@ -9,12 +9,11 @@
 static HandlerVideo *instance = nil;
 
 @interface HandlerVideo () {
-    int32_t _fps;
+    int32_t  _fps;
 }
 @end
 
 @implementation HandlerVideo
-
 + (instancetype)sharedInstance {
     if (!instance) {
         static dispatch_once_t onceToken;
@@ -30,6 +29,8 @@ static HandlerVideo *instance = nil;
 }
 
 #pragma mark - Method
+
+// 图片合成视频
 - (void)composesVideoFullPath:(NSString *)videoFullPath
                frameImgs:(NSArray<UIImage *> *)frameImgs
                           fps:(int32_t)fps
@@ -227,56 +228,96 @@ static HandlerVideo *instance = nil;
     return pxbuffer;
 }
 
-- (void)combinationVideosWithVideoPath:(NSArray<NSString *> *)subsectionPaths videoFullPath:(NSString *)videoFullPath completedBlock:(CompFinalCompletedBlock)completedBlock {
+// 视频合成
+- (void)combinationVideosWithVideoPath:(NSArray<NSString *> *)subsectionPaths
+                         videoFullPath:(NSString *)videoFullPath
+                         isHavaAudio:(BOOL)isHaveAudio
+                         progressBlock:(CompProgressBlcok)progressBlock
+                        completedBlock:(CompFinalCompletedBlock)completedBlock {
     if (!subsectionPaths || subsectionPaths.count == 0) {
         NSLog(@"No such SubsectionNames");
         completedBlock(NO, @"合并失败");
         return;
     }
-    subsectionPaths = [[subsectionPaths reverseObjectEnumerator] allObjects];
     NSDictionary *optDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
     NSString *firstPath = subsectionPaths.firstObject;
     AVAsset *firstVideo = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:firstPath] options:optDict];
-    
-    AVMutableComposition *videoComposition = [AVMutableComposition composition];
-    __block AVMutableCompositionTrack *track = [videoComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
     NSArray *firstVideoTracks = [firstVideo tracksWithMediaType:AVMediaTypeVideo];
-    if (firstVideoTracks.count <= 0) {
-        completedBlock(NO, @"合成失败");
-        return;
-    }
+
+    AVMutableComposition *mixComposition = [AVMutableComposition composition];
+    
+    // 视频轨道
+    AVMutableCompositionTrack *videoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+   // 音频轨道
+    AVMutableCompositionTrack *audioTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    
+    /**
+     // 视频的方向, 根据视频的方向同步视频轨道方向, 可根据需求自行调整
+     CGAffineTransform videoTransform = assetVideoTrack.preferredTransform;
+     if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
+     NSLog(@"垂直拍摄");
+     videoTransform = CGAffineTransformMakeRotation(M_PI_2);
+     }else if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
+     NSLog(@"倒立拍摄");
+     videoTransform = CGAffineTransformMakeRotation(-M_PI_2);
+     }else if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0) {
+     NSLog(@"Home键右侧水平拍摄");
+     videoTransform = CGAffineTransformMakeRotation(0);
+     }else if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0) {
+     NSLog(@"Home键左侧水平拍摄");
+     videoTransform = CGAffineTransformMakeRotation(M_PI);
+     }
+     // 根据视频的方向同步视频轨道方向
+     videoTrack.preferredTransform = videoTransform;
+     */
     
     // 解决拍的视频合成之后旋转90度的问题
-    AVAssetTrack *assetVideoTrack = firstVideoTracks.firstObject;
-    [track setPreferredTransform:assetVideoTrack.preferredTransform];
+    AVAssetTrack *assetVideoTrack = firstVideoTracks.lastObject;
+    NSLog(@"%@", NSStringFromCGSize(assetVideoTrack.naturalSize));
     
-    [track insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstVideo.duration) ofTrack:firstVideoTracks.firstObject atTime:kCMTimeZero error:nil];
-    /**
-     PS: 如果视频有声音,就需要将注释掉的打开
-     */
-//    __block AVMutableCompositionTrack *audioTrack = [videoComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
-//    NSArray *firstVideoAudioTracks = [firstVideo tracksWithMediaType:AVMediaTypeAudio];
-//    if (firstVideoAudioTracks.count > 0) {
-//        [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstVideo.duration) ofTrack:firstVideoAudioTracks.firstObject  atTime:kCMTimeZero error:nil];
-//    }
+    mixComposition.naturalSize = assetVideoTrack.naturalSize;
+    [videoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
     
+   __block CMTime beginTime = kCMTimeZero;
+   __block NSError *error = nil;
     [subsectionPaths enumerateObjectsUsingBlock:^(NSString *videoPath, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (idx == 0) {
-            return;
-        }
-        AVURLAsset *currentVideo = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoPath] options:optDict];
-        NSArray *tracks = [currentVideo tracksWithMediaType:AVMediaTypeVideo];
+        AVAsset *videoAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoPath] options:optDict];
+        NSArray *tracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
         if (tracks <= 0) {
             *stop = YES;
             completedBlock(NO, @"合成失败");
             return;
         }
-        [track insertTimeRange:CMTimeRangeMake(kCMTimeZero, currentVideo.duration) ofTrack:tracks.firstObject atTime:kCMTimeZero error:nil];
-//        NSArray *audioTracks = [currentVideo tracksWithMediaType:AVMediaTypeAudio];
-//        if (audioTracks.count > 0) {
-//            [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, currentVideo.duration) ofTrack:audioTracks.firstObject atTime:kCMTimeZero error:nil];
-//        }
+      
+      BOOL success = [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:tracks.firstObject atTime:beginTime error:&error];
+        if (!success) {
+            *stop = YES;
+            completedBlock(NO, error.localizedDescription);
+            return;
+        }
+        
+        if (isHaveAudio) {   // 根据视频是否有声音设置音轨
+            NSArray *audioTracks = [videoAsset tracksWithMediaType:AVMediaTypeAudio];
+            if (audioTracks.count > 0) {
+                [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:audioTracks.firstObject atTime:beginTime error:nil];
+            }
+        }
+        beginTime = CMTimeAdd(beginTime, videoAsset.duration);
     }];
+    
+    
+    // 用来生成video的组合指令，包含多段instruction。可以决定最终视频的尺寸，裁剪需要在这里进行
+    AVMutableVideoComposition *composition = [AVMutableVideoComposition videoComposition];
+
+    AVMutableVideoCompositionLayerInstruction * layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
+
+    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, [mixComposition duration]);
+
+    instruction.layerInstructions = [NSArray arrayWithObject:layerInstruction];
+    composition.instructions = [NSArray arrayWithObject: instruction];
+    composition.renderSize = assetVideoTrack.naturalSize;
+    composition.frameDuration = CMTimeMake(1, 30); // 30 fps
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:videoFullPath]) {
         [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
@@ -296,10 +337,12 @@ static HandlerVideo *instance = nil;
      AVAssetExportPreset1920x1080   1080pHD
      AVAssetExportPreset3840x2160
      */
-    AVAssetExportSession *exportor = [[AVAssetExportSession alloc] initWithAsset:videoComposition presetName:AVAssetExportPresetHighestQuality];
+    AVAssetExportSession *exportor = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetHighestQuality];
     exportor.outputFileType = AVFileTypeMPEG4;
     exportor.outputURL = [NSURL fileURLWithPath:videoFullPath];
     exportor.shouldOptimizeForNetworkUse = YES;
+    exportor.videoComposition = composition;
+
     [exportor exportAsynchronouslyWithCompletionHandler:^{
         BOOL isSuccess = NO;
         NSString *msg = @"合并完成";
@@ -316,6 +359,7 @@ static HandlerVideo *instance = nil;
             case AVAssetExportSessionStatusExporting:
                 break;
             case AVAssetExportSessionStatusCompleted:
+                progressBlock(1);
                 isSuccess = YES;
                 break;
         }
@@ -323,10 +367,31 @@ static HandlerVideo *instance = nil;
             completedBlock(isSuccess, msg);
         }
     }];
+    // 监听导出进度
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self monitorExportProgress:exportor progressImageBlock:progressBlock completedBlock:completedBlock];
+    });
 }
 
+- (void)monitorExportProgress:(AVAssetExportSession *)exportSession progressImageBlock:(CompProgressBlcok)progressImageBlock completedBlock:(CompFinalCompletedBlock)completedBlock{  // 取巧的办法: 由于是两个并行任务，
+    double delayInSeconds = 0.1;
+    int64_t delta = (int64_t)delayInSeconds * NSEC_PER_SEC;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delta);
+    __weak typeof(self) WS = self;
+    dispatch_after(popTime, dispatch_get_main_queue(), ^{
+        AVAssetExportSessionStatus status = exportSession.status;
+        if (status == AVAssetExportSessionStatusExporting || status == AVAssetExportSessionStatusWaiting) {
+//            NSLog(@"------>> %f",exportSession.progress);
+            if (progressImageBlock) {
+                progressImageBlock(exportSession.progress);
+            }
+            [WS monitorExportProgress:exportSession progressImageBlock:progressImageBlock completedBlock:completedBlock];
+        }
+    });
+}
 
-- (void)splitVideo:(NSURL *)fileUrl fps:(float)fps splitCompleteBlock:(SplitCompleteBlock)splitCompleteBlock {
+// 视频分解
+- (void)splitVideo:(NSURL *)fileUrl fps:(float)fps progressImageBlock:(CompProgressBlcok)progressImageBlock  splitCompleteBlock:(SplitCompleteBlock)splitCompleteBlock {
     if (!fileUrl) {
         return;
     }
@@ -355,6 +420,12 @@ static HandlerVideo *instance = nil;
     [imgGenerator generateCGImagesAsynchronouslyForTimes:times completionHandler:^(CMTime requestedTime, CGImageRef  _Nullable image, CMTime actualTime, AVAssetImageGeneratorResult result, NSError * _Nullable error) {
         printf("current-----: %lld\n", requestedTime.value);
         printf("timeScale----: %d\n",requestedTime.timescale);
+        
+        if (progressImageBlock) {
+            CGFloat progress = requestedTime.value * 1.0 / timesCount;
+            progressImageBlock(progress);
+        }
+        
         BOOL isSuccess = NO;
         switch (result) {
             case AVAssetImageGeneratorCancelled:
@@ -376,6 +447,200 @@ static HandlerVideo *instance = nil;
         }
         if (splitCompleteBlock) {
             splitCompleteBlock(isSuccess,splitImages);
+        }
+    }];
+}
+
+// 添加水印
+- (void)addWatermaskVideoWithWatermaskImg:(UIImage *)watermaskImg inputVideoPath:(NSString *)inputVideoPath outputVideoFullPath:(NSString *)videoFullPath completedBlock:(CompFinalCompletedBlock)completedBlock {
+    NSDictionary *optDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVAsset *videoAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:inputVideoPath] options:optDict];
+    
+    AVMutableComposition *videoComposition = [AVMutableComposition composition];
+    AVMutableCompositionTrack *videoTrack = [videoComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+    NSArray *videoTracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
+    if (videoTracks.count > 0) {
+        [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:videoTracks.firstObject atTime:kCMTimeZero error:nil];
+    }
+    AVAssetTrack *assetVideoTrack = videoTracks.firstObject;
+    [videoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
+    
+    AVMutableCompositionTrack *audioTrack = [videoComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    NSArray *audioTracks = [videoAsset tracksWithMediaType:AVMediaTypeAudio];
+    if (audioTracks.count > 0) {
+        [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:audioTracks.firstObject  atTime:kCMTimeZero error:nil];
+    }
+        
+    // 添加水印
+    CGSize sizeOfVideo = [assetVideoTrack naturalSize];
+    AVMutableVideoComposition *composition = [AVMutableVideoComposition videoComposition];
+    CALayer *watermaskLayer = [self buildLayerLayerSize:sizeOfVideo waterImg:watermaskImg];
+    if (watermaskLayer) {
+        CALayer *animationLayer = [CALayer layer];
+        animationLayer.frame = CGRectMake(0, 0, sizeOfVideo.width, sizeOfVideo.height);
+        
+        CALayer *videoLayer = [CALayer layer];
+        videoLayer.frame = CGRectMake(0, 0, sizeOfVideo.width, sizeOfVideo.height);
+        
+        [animationLayer addSublayer:videoLayer];
+        [animationLayer addSublayer:watermaskLayer];
+        animationLayer.geometryFlipped = YES;
+        
+        composition.frameDuration=CMTimeMake(1, 30);
+        composition.renderSize = sizeOfVideo;
+        AVVideoCompositionCoreAnimationTool *animationTool =
+        [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer
+                                                                                                     inLayer:animationLayer];
+        composition.animationTool = animationTool;
+        
+        AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+        instruction.timeRange = CMTimeRangeMake(kCMTimeZero, [videoComposition duration]);
+       
+        AVMutableVideoCompositionLayerInstruction* layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:assetVideoTrack];
+        instruction.layerInstructions = [NSArray arrayWithObject:layerInstruction];
+        composition.instructions = [NSArray arrayWithObject: instruction];
+    }
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:videoFullPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
+    }
+    
+    AVAssetExportSession *exportor = [[AVAssetExportSession alloc] initWithAsset:videoComposition presetName:AVAssetExportPresetHighestQuality];
+    exportor.outputFileType = AVFileTypeMPEG4;
+    exportor.outputURL = [NSURL fileURLWithPath:videoFullPath];
+    exportor.shouldOptimizeForNetworkUse = YES;
+    if (watermaskLayer) {
+        exportor.videoComposition = composition;
+    }
+    [exportor exportAsynchronouslyWithCompletionHandler:^{
+        BOOL isSuccess = NO;
+        NSString *msg = @"水印添加完成";
+        switch (exportor.status) {
+
+            case AVAssetExportSessionStatusFailed:
+                NSLog(@"HandlerVideo -> addVidesMaskError: %@", exportor.error.localizedDescription);
+                msg = @"水印添加失败";
+                break;
+            case AVAssetExportSessionStatusUnknown:
+            case AVAssetExportSessionStatusCancelled:
+                break;
+            case AVAssetExportSessionStatusWaiting:
+                break;
+            case AVAssetExportSessionStatusExporting:
+                break;
+            case AVAssetExportSessionStatusCompleted:
+                isSuccess = YES;
+                break;
+        }
+        if (completedBlock) {
+            completedBlock(isSuccess, msg);
+        }
+    }];
+}
+
+- (CALayer *)buildLayerLayerSize:(CGSize)layerSize waterImg:(UIImage *)waterImg{
+    CALayer *parentLayer = [CALayer layer];
+    parentLayer.frame = CGRectMake(0, 0, layerSize.width, layerSize.height);
+    //    parentLayer.opacity = 0.0f;
+    CALayer *imageLayer = [self makeImageLayerWithLayerSize:layerSize waterImg:waterImg];
+    [parentLayer addSublayer:imageLayer];
+    return parentLayer;
+}
+
+// 图片Layer
+- (CALayer *)makeImageLayerWithLayerSize:(CGSize)layerSize waterImg:(UIImage *)waterImg{
+    CGFloat scale = layerSize.width / 375;
+    CGRect bounds = [self getWaterImgSizeWithImg:waterImg size:layerSize textWaterH:10 + 20 * scale];
+    CALayer *layer = [CALayer layer];
+    layer.contents = (id) waterImg.CGImage;
+    layer.frame = bounds;
+    layer.allowsEdgeAntialiasing = YES;
+    return layer;
+}
+
+- (CGRect)getWaterImgSizeWithImg:(UIImage *)waterImg size:(CGSize)size textWaterH:(CGFloat)textWaterH {
+    // 水印图片尺寸设置了比例，距离间距，为了方便测试用，实际看开发需要
+    CGFloat scale = 0.3;
+    scale = size.width / 375 * scale;
+    CGFloat x = size.width -  waterImg.size.width * scale - 10;
+    CGFloat imgY = size.height - waterImg.size.height * scale;
+    CGFloat y = imgY - textWaterH;
+    CGFloat w = waterImg.size.width * scale;
+    CGFloat h = waterImg.size.height * scale;
+    CGRect rect = CGRectMake(x, y, w, h);
+    return rect;
+}
+
+// 设置视频速率
+- (void)setVideoSpeed:(VideoSpeedType)speedType inputVideoPath:(NSString *)inputVideoPath outputVideoFullPath:(NSString *)videoFullPath completedBlock:(CompFinalCompletedBlock)completedBlock {
+    NSDictionary *optDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVAsset *videoAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:inputVideoPath] options:optDict];
+    
+    AVMutableComposition *videoComposition = [AVMutableComposition composition];
+    AVMutableCompositionTrack *videoTrack = [videoComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+    NSArray *videoTracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
+    if (videoTracks.count > 0) {
+        [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:videoTracks.firstObject atTime:kCMTimeZero error:nil];
+    }
+    AVAssetTrack *assetVideoTrack = videoTracks.firstObject;
+    [videoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
+    
+    AVMutableCompositionTrack *audioTrack = [videoComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    NSArray *audioTracks = [videoAsset tracksWithMediaType:AVMediaTypeAudio];
+    if (audioTracks.count > 0) {
+        [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration) ofTrack:audioTracks.firstObject  atTime:kCMTimeZero error:nil];
+    }
+    
+    CGFloat scale = 1.0;
+    switch (speedType) {
+        case VideoSpeedTypeNormal:
+            scale = 1.0;
+            break;
+        case VideoSpeedTypeFast:
+             scale = 0.2f;  // 快速 x5
+            break;
+        case VideoSpeedTypeSlow:
+            scale = 4.0f;  // 慢速 x4
+            break;
+        default:
+            break;
+    }
+    
+    // 根据速度比率调节音频和视频
+    [videoTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, CMTimeMake(videoAsset.duration.value, videoAsset.duration.timescale)) toDuration:CMTimeMake(videoAsset.duration.value * scale , videoAsset.duration.timescale)];
+    [audioTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, CMTimeMake(videoAsset.duration.value, videoAsset.duration.timescale)) toDuration:CMTimeMake(videoAsset.duration.value * scale, videoAsset.duration.timescale)];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:videoFullPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
+    }
+    
+    AVAssetExportSession *exportor = [[AVAssetExportSession alloc] initWithAsset:videoComposition presetName:AVAssetExportPresetHighestQuality];
+    exportor.outputFileType = AVFileTypeMPEG4;
+    exportor.outputURL = [NSURL fileURLWithPath:videoFullPath];
+    exportor.shouldOptimizeForNetworkUse = YES;
+   
+    [exportor exportAsynchronouslyWithCompletionHandler:^{
+        BOOL isSuccess = NO;
+        NSString *msg = @"设置速率成功";
+        switch (exportor.status) {
+                
+            case AVAssetExportSessionStatusFailed:
+                NSLog(@"HandlerVideo -> setSpeedError: %@", exportor.error.localizedDescription);
+                msg = @"设置速率成功失败";
+                break;
+            case AVAssetExportSessionStatusUnknown:
+            case AVAssetExportSessionStatusCancelled:
+                break;
+            case AVAssetExportSessionStatusWaiting:
+                break;
+            case AVAssetExportSessionStatusExporting:
+                break;
+            case AVAssetExportSessionStatusCompleted:
+                isSuccess = YES;
+                break;
+        }
+        if (completedBlock) {
+            completedBlock(isSuccess, msg);
         }
     }];
 }
