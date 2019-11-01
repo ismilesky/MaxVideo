@@ -6,7 +6,7 @@
 
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 
-typedef void(^SplitCompleteBlock)(BOOL success, NSMutableArray *splitimgs);
+typedef void(^SplitCompleteBlock)(BOOL success, UIImage *splitimg);
 typedef void(^CompCompletedBlock)(BOOL success);
 typedef void(^CompFinalCompletedBlock)(BOOL success, NSString *errorMsg);
 typedef void(^CompProgressBlcok)(CGFloat progress);

@@ -395,7 +395,6 @@ static HandlerVideo *instance = nil;
     if (!fileUrl) {
         return;
     }
-    NSMutableArray *splitImages = [NSMutableArray array];
     NSDictionary *optDict = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
     AVURLAsset *avasset = [[AVURLAsset alloc] initWithURL:fileUrl options:optDict];
     
@@ -412,7 +411,7 @@ static HandlerVideo *instance = nil;
     }
     
     AVAssetImageGenerator *imgGenerator = [[AVAssetImageGenerator alloc] initWithAsset:avasset];
-    //防止时间出现偏差
+    //防止时间出现偏差(生成高精度的缩略图，耗费时间略长，如果只是想要缩略图无具体要求，可注释掉)
     imgGenerator.requestedTimeToleranceBefore = kCMTimeZero;
     imgGenerator.requestedTimeToleranceAfter = kCMTimeZero;
     
@@ -427,26 +426,24 @@ static HandlerVideo *instance = nil;
         }
         
         BOOL isSuccess = NO;
+        UIImage *frameImg = nil;
         switch (result) {
             case AVAssetImageGeneratorCancelled:
                 NSLog(@"Cancelled");
+                [imgGenerator cancelAllCGImageGeneration];
                 break;
             case AVAssetImageGeneratorFailed:
                 NSLog(@"Failed");
+                [imgGenerator cancelAllCGImageGeneration];
                 break;
             case AVAssetImageGeneratorSucceeded: {
-                UIImage *frameImg = [UIImage imageWithCGImage:image];
-                [splitImages addObject:frameImg];
-                
-                if (requestedTime.value == timesCount) {
-                    isSuccess = YES;
-                    NSLog(@"completed");
-                }
+                isSuccess = YES;
+                frameImg = [UIImage imageWithCGImage:image];
             }
                 break;
         }
         if (splitCompleteBlock) {
-            splitCompleteBlock(isSuccess,splitImages);
+            splitCompleteBlock(isSuccess,frameImg);
         }
     }];
 }

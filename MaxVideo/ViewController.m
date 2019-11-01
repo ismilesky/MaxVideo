@@ -98,10 +98,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             WS.progressView.progress = progress;
         });
-    }  splitCompleteBlock:^(BOOL success, NSMutableArray *splitimgs) {
-        if (success && splitimgs.count != 0) {
-            NSLog(@"----->> success");
-            NSLog(@"---> splitimgs个数:%lu",(unsigned long)splitimgs.count);
+    }  splitCompleteBlock:^(BOOL success, UIImage *splitimg) {
+        if (success && splitimg) {
+            NSLog(@"----->> split success");
         }
     }];
 }
