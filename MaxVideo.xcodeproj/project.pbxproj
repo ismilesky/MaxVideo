@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		572EDBD720E9D0090015ED9D /* AudioTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 572EDBD620E9D0090015ED9D /* AudioTool.m */; };
 		572EDBD920E9D84E0015ED9D /* 123.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 572EDBD820E9D84D0015ED9D /* 123.mp3 */; };
+		574E84A023729A5800C86064 /* video3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 574E849F23729A5800C86064 /* video3.mp4 */; };
+		574E84A42372A83800C86064 /* video4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 574E84A32372A83800C86064 /* video4.mp4 */; };
 		5781A03D20C92E8E00E763D5 /* paint_watermark.png in Resources */ = {isa = PBXBuildFile; fileRef = 5781A03C20C92E8E00E763D5 /* paint_watermark.png */; };
 		57A6B71D1D9E29E4007C7984 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B71C1D9E29E4007C7984 /* main.m */; };
 		57A6B7201D9E29E4007C7984 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A6B71F1D9E29E4007C7984 /* AppDelegate.m */; };
@@ -44,6 +46,8 @@
 		572EDBD520E9D0090015ED9D /* AudioTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioTool.h; sourceTree = "<group>"; };
 		572EDBD620E9D0090015ED9D /* AudioTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioTool.m; sourceTree = "<group>"; };
 		572EDBD820E9D84D0015ED9D /* 123.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 123.mp3; sourceTree = "<group>"; };
+		574E849F23729A5800C86064 /* video3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video3.mp4; sourceTree = "<group>"; };
+		574E84A32372A83800C86064 /* video4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video4.mp4; sourceTree = "<group>"; };
 		5781A03C20C92E8E00E763D5 /* paint_watermark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = paint_watermark.png; sourceTree = "<group>"; };
 		57A6B7181D9E29E4007C7984 /* MaxVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaxVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57A6B71C1D9E29E4007C7984 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -130,6 +134,8 @@
 				57A6B72C1D9E29E5007C7984 /* Info.plist */,
 				57AA40CF1F4FC8E000D9ACA6 /* video2.mp4 */,
 				57AA40D01F4FC8E000D9ACA6 /* video1.mp4 */,
+				574E849F23729A5800C86064 /* video3.mp4 */,
+				574E84A32372A83800C86064 /* video4.mp4 */,
 				572EDBD820E9D84D0015ED9D /* 123.mp3 */,
 				57A6B71B1D9E29E4007C7984 /* Supporting Files */,
 			);
@@ -248,6 +254,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -271,8 +278,10 @@
 				572EDBD920E9D84E0015ED9D /* 123.mp3 in Resources */,
 				57A6B72B1D9E29E5007C7984 /* LaunchScreen.storyboard in Resources */,
 				5781A03D20C92E8E00E763D5 /* paint_watermark.png in Resources */,
+				574E84A023729A5800C86064 /* video3.mp4 in Resources */,
 				57A6B7281D9E29E5007C7984 /* Assets.xcassets in Resources */,
 				57AA40D11F4FC8E000D9ACA6 /* video2.mp4 in Resources */,
+				574E84A42372A83800C86064 /* video4.mp4 in Resources */,
 				57AA40D21F4FC8E000D9ACA6 /* video1.mp4 in Resources */,
 				57A6B7261D9E29E4007C7984 /* Main.storyboard in Resources */,
 			);

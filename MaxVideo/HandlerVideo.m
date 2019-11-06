@@ -273,7 +273,7 @@ static HandlerVideo *instance = nil;
     
     // 解决拍的视频合成之后旋转90度的问题
     AVAssetTrack *assetVideoTrack = firstVideoTracks.lastObject;
-    NSLog(@"%@", NSStringFromCGSize(assetVideoTrack.naturalSize));
+    NSLog(@"======>> 默认尺寸%@", NSStringFromCGSize(assetVideoTrack.naturalSize));
     
     mixComposition.naturalSize = assetVideoTrack.naturalSize;
     [videoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
@@ -305,19 +305,18 @@ static HandlerVideo *instance = nil;
         beginTime = CMTimeAdd(beginTime, videoAsset.duration);
     }];
     
-    
+   // 注释内容根据自己需要自行进行处理(简单的视频拼接，可忽略)
     // 用来生成video的组合指令，包含多段instruction。可以决定最终视频的尺寸，裁剪需要在这里进行
-    AVMutableVideoComposition *composition = [AVMutableVideoComposition videoComposition];
-
-    AVMutableVideoCompositionLayerInstruction * layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
-
-    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, [mixComposition duration]);
-
-    instruction.layerInstructions = [NSArray arrayWithObject:layerInstruction];
-    composition.instructions = [NSArray arrayWithObject: instruction];
-    composition.renderSize = assetVideoTrack.naturalSize;
-    composition.frameDuration = CMTimeMake(1, 30); // 30 fps
+//    AVMutableVideoComposition *composition = [AVMutableVideoComposition videoComposition];
+//    AVMutableVideoCompositionLayerInstruction * layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
+//
+//    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+//    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, [mixComposition duration]);
+//
+//    instruction.layerInstructions = [NSArray arrayWithObject:layerInstruction];
+//    composition.instructions = [NSArray arrayWithObject: instruction];
+//    composition.renderSize = assetVideoTrack.naturalSize;
+//    composition.frameDuration = CMTimeMake(1, 30); // 30 fps
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:videoFullPath]) {
         [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
@@ -341,7 +340,7 @@ static HandlerVideo *instance = nil;
     exportor.outputFileType = AVFileTypeMPEG4;
     exportor.outputURL = [NSURL fileURLWithPath:videoFullPath];
     exportor.shouldOptimizeForNetworkUse = YES;
-    exportor.videoComposition = composition;
+//    exportor.videoComposition = composition;
 
     [exportor exportAsynchronouslyWithCompletionHandler:^{
         BOOL isSuccess = NO;
